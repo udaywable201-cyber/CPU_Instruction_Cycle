@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPU Instruction Cycle Simulator | Sahil Shelar<br>Uday Wable</title>
+<style>
+:root{--navy:#061326;--navy2:#0a1d35;--panel:#0d2440;--line:#234565;--blue:#1687f8;--cyan:#39e0e9;--text:#eef7ff;--muted:#9bb4ce;--green:#3fe0ad;--red:#ff7d8b;--purple:#a58aff}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:82px}body{margin:0;background:#071426;color:var(--text);font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button,a,select{cursor:pointer}a{color:inherit;text-decoration:none}.topbar{position:sticky;top:0;z-index:5;background:#07182bea;backdrop-filter:blur(14px);border-bottom:1px solid #1c4567;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(16px,4vw,54px)}.brand{display:flex;align-items:center;gap:12px;min-width:240px}.cpu-logo{width:42px;height:42px;border:2px solid var(--cyan);border-radius:11px;display:grid;place-items:center;color:var(--cyan);font-weight:900;box-shadow:0 0 20px #39e0e922}.brand strong{display:block;font-size:15px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.7px}.nav{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.nav a{font-size:11px;font-weight:750;color:#bfd1e4;padding:9px 11px;border-radius:8px}.nav a:hover,.nav a.active{background:var(--blue);color:white}.hero{padding:46px clamp(16px,5vw,70px) 40px;background:radial-gradient(ellipse at 12% 40%,#12416c 0,transparent 34%),radial-gradient(ellipse at 90% 10%,#0b4660 0,transparent 35%),linear-gradient(115deg,#061326,#081b32);border-bottom:1px solid #163956}.hero-inner{max-width:1320px;margin:auto;display:grid;grid-template-columns:190px 1fr;gap:32px;align-items:center}.hero-cpu{height:160px;width:160px;margin:auto;border:2px solid #37dff2;border-radius:28px;display:grid;place-items:center;position:relative;color:#6af3ff;font-size:36px;font-weight:900;box-shadow:0 0 0 12px #1c91d31b,0 0 55px #00d8ff30}.hero-cpu:before,.hero-cpu:after{content:"";position:absolute;inset:-16px;border:1px dashed #178edb77;border-radius:35px}.hero-cpu:after{inset:20px;border:1px solid #2eb8e355;border-radius:17px}.eyebrow{color:var(--cyan);font-size:10px;font-weight:850;letter-spacing:1.7px;margin:0 0 8px}.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.12;letter-spacing:-1.2px;margin:0}.hero h1 span{color:var(--cyan)}.hero p.lead{color:#b4c9df;max-width:740px;margin:13px 0 22px}.student-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #1d5579;border-radius:13px;overflow:hidden;background:#07172caa}.meta{padding:12px 15px;border-right:1px solid #1c3d5b}.meta:last-child{border:0}.meta span{display:block;font-size:10px;color:var(--cyan);font-weight:800;letter-spacing:.6px}.meta b{font-size:12px;font-weight:650}.container{max-width:1320px;margin:auto;padding:24px clamp(14px,3vw,34px) 32px}.section{border:1px solid #1c5b91;border-radius:14px;overflow:hidden;background:linear-gradient(140deg,#f7fbff,#eaf5ff);color:#092849;margin-bottom:18px;box-shadow:0 8px 28px #00000017}.section-head{background:linear-gradient(100deg,#0875dc,#48b4ff 52%,#e8f7ff);color:white;padding:11px 17px;display:flex;align-items:center;gap:11px}.section-head .num{font-size:20px;font-weight:900}.section-head h2{font-size:16px;margin:0;letter-spacing:.2px}.section-body{padding:15px;}.demo-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:stretch}.simulator{background:#061b32;color:#eff8ff;border:1px solid #235378;border-radius:10px;padding:14px}.sim-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:11px;border-bottom:1px solid #183a59;font-size:11px;font-weight:800}.ready{color:var(--green);font-size:10px}.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.sim-box{border:1px solid #244b6c;border-radius:8px;padding:10px;background:#0b2540}.sim-box h3{font-size:11px;margin:0 0 7px;color:#a9d4fa}.register-line{display:flex;justify-content:space-between;border-bottom:1px solid #1b3b57;padding:5px 2px;font:11px ui-monospace,monospace}.register-line:last-child{border:0}.memory-list{display:grid;grid-template-columns:1fr 1fr;gap:4px}.memory-cell{background:#071a2f;border-radius:4px;padding:5px;font:10px ui-monospace,monospace;color:#c1d9f0}.input-area{margin-top:13px;display:grid;grid-template-columns:1fr auto;gap:8px}.input-area input,.input-area select{width:100%;background:#07182a;color:#eaf6ff;border:1px solid #315978;border-radius:7px;padding:10px;min-width:0;outline:none}.input-area input:focus,.input-area select:focus{border-color:var(--cyan)}.button-line{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.btn{border:1px solid #2b638b;border-radius:7px;padding:9px 13px;font-size:11px;font-weight:800;color:#eaf7ff;background:#153a5c}.btn.primary{background:linear-gradient(100deg,#087be9,#27a9ff);border-color:#30a9ff}.btn:hover{filter:brightness(1.13);transform:translateY(-1px)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.pipeline{display:flex;gap:8px;align-items:center;margin-top:13px}.stage{flex:1;text-align:center;border:1px solid #31506d;background:#0c2845;border-radius:8px;padding:11px 5px;color:#a9c6df;font-size:11px;font-weight:850;transition:.2s}.stage.active{background:#124e7a;border-color:#3ce1e8;color:white;box-shadow:0 0 20px #22d3ee22}.stage.done{background:#104237;border-color:#39dca8;color:#baffeb}.arrow{color:var(--cyan);font-size:20px}.stage-message{font-size:11px;color:#b7cde1;margin-top:11px;min-height:34px}.demo-explain h3,.system-info h3{color:#075ba9;margin:0 0 8px;font-size:14px}.demo-explain ol{padding-left:21px;margin:0;color:#254a70;font-size:12px}.demo-explain li{margin:0 0 10px}.note{margin-top:14px;padding:12px;background:#dff3ff;border:1px solid #b3dfff;border-radius:8px;color:#16476d;font-size:11px}.system-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center}.architecture{background:#061b32;border-radius:10px;padding:20px;color:#eef7ff;border:1px solid #244d6c}.architecture h3{margin:0 0 20px;font-size:13px}.arch-flow{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}.arch-box{min-width:105px;text-align:center;padding:14px 10px;border:1px solid #43a9ff;border-radius:9px;background:#0e3354;font-size:11px;font-weight:800}.arch-box small{display:block;font-weight:500;color:#a8cde9;margin-top:5px}.arch-box.purple{border-color:var(--purple);background:#2a2450}.arch-box.green{border-color:#19d8a4;background:#0a3c3b}.arch-arrow{font-size:22px;color:var(--cyan)}.json-line{text-align:center;color:#58e4ee;font-size:10px;margin-top:17px}.system-info ul{padding-left:19px;color:#23496c;font-size:12px;margin:7px 0 17px}.system-info li{margin-bottom:5px}.check{color:#08a88e;font-weight:900;margin-right:6px}.lower-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.code-card{background:#061b32;border-radius:10px;border:1px solid #234e70;overflow:hidden;color:#e4f4ff}.code-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 13px;background:#0c2b49;border-bottom:1px solid #244866;font-size:11px;font-weight:800}.copy-btn{background:#173f61;border:1px solid #3a739c;border-radius:6px;color:#e7f8ff;padding:6px 10px;font-size:10px;font-weight:800}.code-card pre{margin:0;padding:15px;overflow:auto;max-height:430px;font:11px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#a9d7ff;white-space:pre}.code-explain{padding:14px;border:1px solid #b9dcf5;background:#f3faff;border-radius:9px;margin-top:12px;color:#214a6d;font-size:12px}.code-explain h3{margin:0 0 8px;color:#075ba9;font-size:13px}.code-explain ul{padding-left:18px;margin:7px 0}.testing-grid{display:grid;gap:12px}.test-procedure{padding:12px;border:1px solid #c8e2f5;background:#f6fbff;border-radius:8px}.test-procedure h3{margin:0 0 7px;color:#075ba9;font-size:13px}.test-procedure ol{margin:0;padding-left:19px;color:#234b70;font-size:11px}.test-procedure li{padding:2px 0}.test-table{width:100%;border-collapse:collapse;background:white;font-size:11px}.test-table th{background:#0b5fa7;color:white;text-align:left;padding:8px}.test-table td{padding:7px 8px;border:1px solid #c4dff3;color:#20476b}.test-table tr:nth-child(even){background:#f0f8ff}.test-run{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#dcfff0;border:1px solid #8ee6c2;border-radius:8px;padding:11px;color:#086b4d;font-size:11px}.test-run button{background:#0d946c;border:0;color:white;border-radius:6px;padding:7px 10px;font-size:10px;font-weight:800}.test-output{color:#214a6d;font:11px ui-monospace,monospace;margin:0;white-space:pre-wrap}.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:19px clamp(16px,4vw,54px);background:#041020;border-top:1px solid #1c4567;color:#8fa9c4;font-size:10px}.toast{position:fixed;bottom:20px;right:20px;z-index:9;background:#0b3d36;color:#baffeb;border:1px solid #29a981;padding:11px 15px;border-radius:9px;box-shadow:0 10px 30px #0005;font-size:12px;display:none}.toast.show{display:block}
+@media(max-width:900px){.topbar{align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.hero-inner{grid-template-columns:115px 1fr;gap:20px}.hero-cpu{width:105px;height:105px;font-size:26px}.student-meta{grid-template-columns:repeat(2,1fr)}.meta:nth-child(2){border-right:0}.meta:nth-child(-n+2){border-bottom:1px solid #1c3d5b}.demo-grid,.system-grid,.lower-grid{grid-template-columns:1fr}.architecture{padding:16px}}
+@media(max-width:560px){.hero{padding-top:30px}.hero-inner{grid-template-columns:1fr}.hero-cpu{display:none}.hero h1{font-size:30px}.meta{padding:10px}.meta b{font-size:11px}.section-head h2{font-size:13px}.section-head .num{font-size:16px}.section-body{padding:10px}.sim-grid{grid-template-columns:1fr}.pipeline{gap:4px}.stage{font-size:9px;padding:9px 2px}.arrow{font-size:15px}.input-area{grid-template-columns:1fr}.arch-flow{gap:6px}.arch-box{min-width:90px;flex:1}.arch-arrow{font-size:16px}.footer{flex-direction:column}.test-table{font-size:10px}}
+
+/* Professional UI refinement */
+:root{--navy:#07111f;--navy2:#0b1a2d;--panel:#10243b;--line:#28445f;--blue:#2678f3;--cyan:#57e5f0;--text:#f3f7ff;--muted:#a5b7cc;--green:#49e2b2;--red:#ff7e91;--purple:#b6a2ff}
+body{background:radial-gradient(ellipse at 85% 4%,#123a5b 0,transparent 28%),#07111f;letter-spacing:.005em}
+.topbar{padding-top:12px;padding-bottom:12px;background:rgba(5,16,30,.88);border-bottom-color:#27425d;box-shadow:0 8px 30px #0002}
+.brand{gap:13px}.cpu-logo{background:linear-gradient(145deg,#112e4b,#07182b);box-shadow:0 0 0 5px #39e0e90d,0 0 28px #39e0e91c}
+.nav a{font-size:11px;transition:background .2s,color .2s,transform .2s}.nav a:hover{transform:translateY(-1px)}
+.hero{position:relative;overflow:hidden;padding-top:54px;padding-bottom:48px;background:radial-gradient(ellipse at 10% 20%,#123e69 0,transparent 40%),radial-gradient(ellipse at 92% 0%,#0b4658 0,transparent 38%),linear-gradient(120deg,#07111f,#0a1b30 70%,#07111f)}
+.hero:after{content:"";position:absolute;right:-70px;bottom:-150px;width:360px;height:360px;border:1px solid #4ce5f122;border-radius:50%;box-shadow:0 0 0 30px #4ce5f108,0 0 0 70px #4ce5f105;pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1380px}.hero h1{font-size:clamp(32px,4.5vw,54px);letter-spacing:-1.7px}.hero p.lead{font-size:15px;line-height:1.8}.eyebrow{letter-spacing:2.2px}
+.hero-cpu{background:linear-gradient(145deg,#0d2c49aa,#06172a);border-radius:32px;box-shadow:0 0 0 12px #1c91d310,0 0 70px #00d8ff22,inset 0 0 30px #00d8ff08}
+.student-meta{backdrop-filter:blur(8px);box-shadow:0 10px 30px #0002}.meta{padding:14px 16px}.meta b{display:block;margin-top:3px;line-height:1.5}
+.container{max-width:1380px;padding-top:30px;padding-bottom:38px}.section{border-color:#c5dff3;border-radius:16px;box-shadow:0 14px 36px #00000020;transition:box-shadow .25s}.section:hover{box-shadow:0 17px 42px #00000027}.section-head{padding:14px 20px;background:linear-gradient(100deg,#075db7,#178bea 60%,#56c8f4);gap:13px}.section-head .num{display:grid;place-items:center;width:35px;height:35px;border:1px solid #ffffff60;background:#ffffff19;border-radius:10px;font-size:16px}.section-head h2{font-size:14px;letter-spacing:.9px}.section-body{padding:20px}
+.simulator{border-radius:13px;padding:17px;background:linear-gradient(145deg,#06182b,#091f36);box-shadow:inset 0 1px #ffffff0b,0 10px 24px #071a2d16}.sim-head{font-size:12px}.sim-box{border-radius:10px}.input-area input,.input-area select{border-radius:9px;padding:12px;font-size:12px}.btn,.copy-btn{transition:transform .18s,filter .18s,box-shadow .18s}.btn{border-radius:9px;padding:10px 14px}.btn.primary{box-shadow:0 5px 15px #1687f82c}.btn:focus-visible,.copy-btn:focus-visible,.nav a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.stage{border-radius:10px;padding:13px 5px}.stage.active{box-shadow:0 0 0 2px #3ce1e81c,0 0 24px #22d3ee21}.demo-explain{padding:4px 3px}.demo-explain li{line-height:1.7}.note{line-height:1.7;border-radius:10px}
+.architecture{border-radius:13px;background:radial-gradient(ellipse at 50% 0%,#123d5d,#061b32 75%);padding:25px}.arch-box{border-radius:11px;box-shadow:0 8px 20px #0002}.system-info li{line-height:1.65;margin-bottom:7px}.code-card{border-radius:12px;box-shadow:0 10px 25px #0001}.code-toolbar{padding:12px 15px}.copy-btn{cursor:pointer}.code-card pre{font-size:12px;line-height:1.8}.code-explain,.test-procedure{border-radius:11px;line-height:1.7}.test-table{border-radius:9px;overflow:hidden}.test-table th{padding:10px}.test-table td{padding:9px}.test-run{border-radius:11px}.footer{padding-top:24px;padding-bottom:24px;line-height:1.8}
+.toast{backdrop-filter:blur(10px);box-shadow:0 15px 40px #0005}
+@media(max-width:900px){.hero{padding-top:38px;padding-bottom:34px}.section-body{padding:15px}}
+@media(max-width:560px){.hero h1{font-size:32px;letter-spacing:-1px}.student-meta{border-radius:11px}.section-head{padding:11px 13px}.section-body{padding:11px}.btn{flex:1;min-width:115px}.test-run{align-items:flex-start;flex-direction:column}.test-run button{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#home"><span class="cpu-logo">CPU</span><span><strong>CPU Instruction Cycle Simulator</strong><small>COA MICRO PROJECT · SAHIL SHELAR</small></span></a>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#home" class="active">Home</a><a href="#live">01. Live Demonstration</a><a href="#design">02. System Design</a><a href="#language">03. Programming Language</a><a href="#testing">04. Testing &amp; Results</a>
+  </nav>
+</header>
+<section class="hero" id="home"><div class="hero-inner">
+  <div class="hero-cpu">CPU</div>
+  <div><p class="eyebrow">COMPUTER ORGANIZATION AND ARCHITECTURE</p><h1>CPU Instruction Cycle <span>Simulator</span></h1><p class="lead">Understand how a CPU works — step by step. Explore Fetch, Decode and Execute using a simple interactive learning simulator.</p>
+    <div class="student-meta">
+      <div class="meta"><span>STUDENT NAME</span><b>Sahil Shelar<br>Uday Wable</b></div><div class="meta"><span>PRN</span><b>2125UIDM1069<br>2125UIDM1049</b></div><div class="meta"><span>DEPARTMENT</span><b>Integrated B.Tech<br>Second Year(CSE)</b></div><div class="meta"><span>SUBJECT</span><b>Computer Organization and Architecture (COA)</b></div>
+    </div>
+  </div>
+</div></section>
+<main class="container">
+<section class="section" id="live"><div class="section-head"><span class="num">▶</span><h2>01 / LIVE DEMONSTRATION</h2></div><div class="section-body"><div class="demo-grid">
+  <div class="simulator">
+    <div class="sim-head"><span>▦ &nbsp; CPU Instruction Cycle Simulator</span><span class="ready" id="status">● Ready</span></div>
+    <div class="sim-grid">
+      <div class="sim-box"><h3>CPU Registers</h3><div class="register-line"><span>PC</span><b id="pc">0</b></div><div class="register-line"><span>IR</span><b id="ir">—</b></div><div class="register-line"><span>ACC</span><b id="acc">0</b></div></div>
+      <div class="sim-box"><h3>Memory (M[0–7])</h3><div class="memory-list" id="memory"></div></div>
+    </div>
+    <div class="input-area"><select id="sample"><option value="ADD 5, 3">ADD 5, 3 — Addition</option><option value="SUB 9, 4">SUB 9, 4 — Subtraction</option><option value="MUL 6, 7">MUL 6, 7 — Multiplication</option><option value="DIV 8, 2">DIV 8, 2 — Division</option><option value="DIV 8, 0">DIV 8, 0 — Error example</option><option value="LOAD 12">LOAD 12 — Load ACC</option><option value="STORE">STORE — Save ACC</option></select><input id="instruction" aria-label="Instruction input" value="ADD 5, 3" spellcheck="false"></div>
+    <div class="button-line"><button class="btn primary" id="run">▶ Run Cycle</button><button class="btn" id="next">→ Next Step</button><button class="btn" id="reset">↺ Reset CPU</button><button class="btn" id="resetAll">⟲ Reset All</button></div>
+    <div class="pipeline"><div class="stage active" id="fetchStage">01 · Fetch</div><span class="arrow">→</span><div class="stage" id="decodeStage">02 · Decode</div><span class="arrow">→</span><div class="stage" id="executeStage">03 · Execute</div></div>
+    <div class="stage-message" id="stageMessage" aria-live="polite">Ready. Enter an instruction and click Run Cycle or Next Step.</div>
+    <div class="sim-box" style="margin-top:10px"><h3>Execution result</h3><div id="result" style="font:14px ui-monospace,monospace;color:#39e0e9">Waiting for execution…</div></div>
+    <div class="sim-box" style="margin-top:10px"><h3>Execution history</h3><div id="history" aria-live="polite" style="font:11px/1.7 ui-monospace,monospace;color:#b9d8f2">No instructions executed yet.</div></div>
+  </div>
+  <aside class="demo-explain"><h3>How it works</h3><ol><li>Enter an instruction or select one from the dropdown.</li><li>Click <b>Run Cycle</b> or <b>Next Step</b> to start the cycle.</li><li>Watch the <b>Fetch → Decode → Execute</b> stages update.</li><li>View PC, IR, ACC, memory and the final result.</li></ol><div class="note"><b>Learning note</b><br>This front-end demo simulates basic CPU behavior using JavaScript in your browser. It does not connect to a Python/Flask backend.</div><h3 style="margin-top:18px">Supported instructions</h3><ul style="padding-left:18px;color:#254a70;font-size:12px"><li><b>ADD A, B</b> — add two values</li><li><b>SUB A, B</b> — subtract B from A</li><li><b>MUL A, B</b> — multiply values</li><li><b>DIV A, B</b> — divide A by B</li><li><b>LOAD A</b> — load A into ACC</li><li><b>STORE</b> — store ACC in M[0]</li></ul></aside>
+</div></div></section>
+<section class="section" id="design"><div class="section-head"><span class="num">⌘</span><h2>02 / SYSTEM DESIGN</h2></div><div class="section-body"><div class="system-grid">
+  <div class="architecture"><h3>System Architecture</h3><div class="arch-flow"><div class="arch-box">Student / User</div><span class="arch-arrow">→</span><div class="arch-box">Web Browser<small>HTML · CSS · JavaScript</small></div><span class="arch-arrow">→</span><div class="arch-box purple">JS Simulator<small>Instruction logic</small></div></div><div class="json-line">Browser state update · no server or database required</div></div>
+  <div class="system-info"><h3>Components</h3><ul><li><b>Frontend:</b> HTML5, CSS3 and JavaScript</li><li><b>Simulation:</b> JavaScript instruction parser and CPU state</li><li><b>Display:</b> Registers, memory, pipeline and result panel</li><li><b>Storage:</b> Temporary in-page state only</li></ul><h3>Key Features</h3><ul><li><span class="check">✓</span> Three-stage instruction cycle</li><li><span class="check">✓</span> CPU register and memory view</li><li><span class="check">✓</span> Run, Next Step and Reset controls</li><li><span class="check">✓</span> Input validation and division-by-zero handling</li><li><span class="check">✓</span> Mobile-friendly responsive layout</li></ul></div>
+</div></div></section>
+<div class="lower-grid">
+<section class="section" id="language"><div class="section-head"><span class="num">&lt;/&gt;</span><h2>03 / PROGRAMMING LANGUAGE</h2></div><div class="section-body">
+  <div class="code-card"><div class="code-toolbar"><span>Python example · simulator.py</span><button class="copy-btn" id="copyCode">▣ Copy Code</button></div><pre id="pythonCode">
+# CPU Instruction Simulator
+
+def execute_instruction(instruction, registers, memory):
+    # Convert instruction to uppercase and split into parts
+    parts = instruction.upper().replace(",", " ").split()
+
+    # Check if instruction is empty
+    if len(parts) == 0:
+        print("Please enter an instruction")
+        return
+
+    # Get the instruction name
+    op = parts[0]
+
+    # Perform arithmetic operations
+    if op in ["ADD", "SUB", "MUL", "DIV"]:
+        a = float(parts[1])
+        b = float(parts[2])
+
+        if op == "ADD":
+            result = a + b       # Addition
+        elif op == "SUB":
+            result = a - b       # Subtraction
+        elif op == "MUL":
+            result = a * b       # Multiplication
+        elif op == "DIV":
+            if b == 0:
+                print("Cannot divide by zero")
+                return
+            result = a / b       # Division
+
+        registers["ACC"] = result  # Store result in ACC
+        print("Result:", result)
+
+    # Load a number into the accumulator
+    elif op == "LOAD":
+        registers["ACC"] = float(parts[1])
+        print("Loaded value:", registers["ACC"])
+
+    # Store ACC value in memory location 0
+    elif op == "STORE":
+        memory[0] = registers["ACC"]
+        print("Stored value:", memory[0])
+
+    else:
+        print("Invalid instruction")
+
+
+# Initialize CPU register and memory
+registers = {"ACC": 0}
+memory = [0] * 8
+
+# Take an instruction from the user
+instruction = input("Enter instruction: ")
+
+# Execute the instruction
+execute_instruction(instruction, registers, memory)
+
+# Display final register and memory values
+print("ACC Register:", registers["ACC"])
+print("Memory:", memory)
+
+
+    raise ValueError("Unsupported instruction or invalid syntax")</pre></div>
+  <div class="code-explain"><h3>About the code</h3><p>The Python example demonstrates how a backend could parse instructions and validate operands.</p><ul><li>Instruction parsing and validation</li><li>Arithmetic operations</li><li>Accumulator and memory updates</li><li>Friendly error handling</li></ul><p><b>Important:</b> the live demo above runs in JavaScript only. This Python snippet is for learning and can be copied into a Python editor; it is not executed by this static webpage.</p></div>
+</div></section>
+<section class="section" id="testing"><div class="section-head"><span class="num">✓</span><h2>04 / TESTING AND RESULTS</h2></div><div class="section-body testing-grid">
+  <div class="test-procedure"><h3>Testing procedure</h3><ol><li>Open this HTML file in a modern browser.</li><li>Enter an instruction or choose one from the dropdown.</li><li>Click <b>Run Cycle</b> to complete the cycle.</li><li>Click <b>Next Step</b> repeatedly to inspect each stage.</li><li>Verify register values, memory, result and error messages.</li><li>Use Reset CPU or Reset All to check reset behavior.</li></ol></div>
+  <div><h3 style="margin:0 0 8px;color:#075ba9;font-size:13px">Sample test cases</h3><table class="test-table"><thead><tr><th>Instruction</th><th>Expected result</th></tr></thead><tbody><tr><td>ADD 5, 3</td><td>8</td></tr><tr><td>SUB 9, 4</td><td>5</td></tr><tr><td>MUL 6, 7</td><td>42</td></tr><tr><td>DIV 8, 2</td><td>4</td></tr><tr><td>DIV 8, 0</td><td>Error: division by zero</td></tr><tr><td>LOAD 12</td><td>ACC = 12</td></tr><tr><td>STORE</td><td>M[0] = current ACC</td></tr></tbody></table></div>
+  <div class="test-run"><span><b>Interactive check</b><br><span id="testSummary">Run the test cases in the simulator to check results.</span></span><button id="runTests">Run Quick Tests</button></div><pre id="testOutput" class="test-output" aria-live="polite"></pre>
+</div></section>
+</div>
+</main>
+<footer class="footer"><span>CPU Instruction Cycle Simulator &nbsp; | &nbsp; Sahil Shelar & Uday Wable &nbsp; | &nbsp; PRN 2125UIDM169 & 2125UIDM149</span><span>Integrated B.Tech · Computer Organization and Architecture (COA)</span><span>Educational simulation for learning purposes.</span></footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const initialMemory = () => Array(8).fill(null);
+  let cpu = {pc:0,ir:"—",acc:0,memory:initialMemory(),instruction:"",parsed:null,stage:0,logs:[],result:null,completed:false};
+  let history = [];
+  const stages = ["fetchStage","decodeStage","executeStage"];
+  const examples = {
+    "ADD 5, 3":"Addition: add the two operands and place the result in ACC.",
+    "SUB 9, 4":"Subtraction: subtract the second operand from the first.",
+    "MUL 6, 7":"Multiplication: multiply the two operands.",
+    "DIV 8, 2":"Division: divide the first operand by the second.",
+    "LOAD 12":"LOAD: copy the given value into the accumulator.",
+    "STORE":"STORE: copy the accumulator value into memory location M[0]."
+  };
+  function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1900)}
+  function parse(raw){
+    if(!raw.trim())throw Error("Please enter an instruction.");
+    const s=raw.trim().replace(/\s+/g," ").toUpperCase();
+    let m;
+    if((m=s.match(/^(ADD|SUB|MUL|DIV)\s+([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*,\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))$/))){
+      const a=Number(m[2]),b=Number(m[3]);if(!Number.isFinite(a)||!Number.isFinite(b))throw Error("Please enter valid numeric operands.");
+      if(m[1]==="DIV"&&b===0)throw Error("Cannot divide by zero. Change the second operand and try again.");
+      return {op:m[1],a,b,text:s};
+    }
+    if((m=s.match(/^LOAD\s+([+-]?(?:\d+(?:\.\d*)?|\.\d+))$/))){const a=Number(m[1]);if(!Number.isFinite(a))throw Error("Enter a valid number for LOAD.");return {op:"LOAD",a,text:s};}
+    if(s==="STORE")return {op:"STORE",text:s};
+    const op=s.split(" ")[0];
+    if(!["ADD","SUB","MUL","DIV","LOAD","STORE"].includes(op))throw Error("Unsupported instruction. Use ADD, SUB, MUL, DIV, LOAD or STORE.");
+    throw Error("Invalid instruction format. Examples: ADD 5, 3 · LOAD 12 · STORE.");
+  }
+  function showStatus(text,error=false){$("status").textContent=(error?"● Error":text==="Completed"?"● Completed":text==="Ready"?"● Ready":"● "+text);$("status").style.color=error?"#ff7d8b":text==="Completed"?"#3fe0ad":text==="Ready"?"#3fe0ad":"#f4cb73"}
+  function render(){
+    $("pc").textContent=cpu.pc;$("ir").textContent=cpu.ir;$("acc").textContent=cpu.acc;
+    $("memory").replaceChildren();
+    cpu.memory.forEach((v,i)=>{const d=document.createElement("div");d.className="memory-cell";d.textContent=`${i}: ${v===null?"—":v}`;$("memory").append(d)});
+    stages.forEach((id,i)=>{const el=$(id);el.classList.toggle("done",cpu.stage>i);el.classList.toggle("active",cpu.stage===i&&!cpu.completed)});
+    if(cpu.completed){showStatus("Completed");$("stageMessage").textContent=cpu.logs[2]||"Instruction cycle completed.";$("result").textContent=`${cpu.instruction} → ${cpu.result}`;}
+    else{showStatus(cpu.stage===0?"Ready":stages[cpu.stage-1].replace("Stage","")+" complete");$("stageMessage").textContent=cpu.logs[cpu.stage-1]||"Ready. Click Next Step to advance one stage.";$("result").textContent="Waiting for execution…";}
+    $("history").textContent=history.length?history.slice(-5).reverse().map((h,i)=>`${history.length-i}. ${h.instruction}  →  ${h.result}`).join("\n"):"No instructions executed yet.";
+  }
+  function begin(){
+    const raw=$("instruction").value;
+    if(cpu.stage>0&&!cpu.completed){
+      if(raw.trim().toUpperCase()!==cpu.instruction)throw Error("Finish or reset the current instruction before changing it.");
+      return;
+    }
+    if(cpu.completed){cpu.stage=0;cpu.logs=[];cpu.result=null;cpu.completed=false;}
+    cpu.parsed=parse(raw);cpu.instruction=cpu.parsed.text;cpu.ir="—";cpu.logs=[];cpu.stage=0;
+  }
+  function advance(){
+    if(cpu.completed)throw Error("This instruction is complete. Enter another instruction or reset.");
+    begin();
+    const p=cpu.parsed;
+    if(cpu.stage===0){cpu.ir=cpu.instruction;cpu.logs[0]=`FETCH: copied "${cpu.ir}" into IR.`;cpu.stage=1;}
+    else if(cpu.stage===1){cpu.logs[1]=p.op==="STORE"?"DECODE: identified STORE; ACC will be copied to M[0].":p.op==="LOAD"?`DECODE: identified LOAD with value ${p.a}.`:`DECODE: identified ${p.op} with operands ${p.a} and ${p.b}.`;cpu.stage=2;}
+    else if(cpu.stage===2){
+      switch(p.op){
+        case "ADD":cpu.result=p.a+p.b;cpu.acc=cpu.result;break;
+        case "SUB":cpu.result=p.a-p.b;cpu.acc=cpu.result;break;
+        case "MUL":cpu.result=p.a*p.b;cpu.acc=cpu.result;break;
+        case "DIV":if(p.b===0)throw Error("Cannot divide by zero.");cpu.result=p.a/p.b;cpu.acc=cpu.result;break;
+        case "LOAD":cpu.acc=p.a;cpu.result=cpu.acc;break;
+        case "STORE":cpu.memory[0]=cpu.acc;cpu.result=cpu.acc;break;
+      }
+      cpu.logs[2]=p.op==="STORE"?`EXECUTE: stored ACC (${cpu.acc}) in M[0].`:p.op==="LOAD"?`EXECUTE: loaded ${cpu.acc} into ACC.`:`EXECUTE: ${p.a} ${p.op} ${p.b} = ${cpu.result}; ACC updated.`;
+      cpu.pc++;cpu.stage=3;cpu.completed=true;
+      history.push({instruction:cpu.instruction,result:cpu.result});
+    }
+    render();
+  }
+  function handleStep(){try{advance()}catch(e){showStatus("Error",true);$("stageMessage").textContent=e.message;toast(e.message)}}
+  function runCycle(){try{if(cpu.completed){cpu.stage=0;cpu.completed=false;cpu.logs=[]}while(!cpu.completed)advance()}catch(e){showStatus("Error",true);$("stageMessage").textContent=e.message;toast(e.message)}}
+  function reset(clearInput=false){cpu={pc:0,ir:"—",acc:0,memory:initialMemory(),instruction:"",parsed:null,stage:0,logs:[],result:null,completed:false};if(clearInput){history=[];$("instruction").value="ADD 5, 3";}render();$("stageMessage").textContent="CPU reset. Ready for a new instruction.";if(clearInput)toast("All simulation state and history reset.");}
+  $("sample").addEventListener("change",()=>{$("instruction").value=$("sample").value;});
+  $("run").addEventListener("click",runCycle);$("next").addEventListener("click",handleStep);$("reset").addEventListener("click",()=>reset(false));$("resetAll").addEventListener("click",()=>reset(true));
+  $("instruction").addEventListener("keydown",e=>{if(e.key==="Enter")runCycle()});
+  $("copyCode").addEventListener("click",async()=>{const text=$("pythonCode").textContent;try{await navigator.clipboard.writeText(text);toast("Python code copied to clipboard.")}catch(e){const area=document.createElement("textarea");area.value=text;document.body.append(area);area.select();document.execCommand("copy");area.remove();toast("Python code copied to clipboard.")}});
+  $("runTests").addEventListener("click",()=>{
+    const cases=[["ADD 5, 3",8],["SUB 9, 4",5],["MUL 6, 7",42],["DIV 8, 2",4],["DIV 8, 0","ERROR"],["LOAD 12",12]];
+    const out=[];let passed=0;
+    for(const [instruction,expected] of cases){let actual;try{const p=parse(instruction);if(p.op==="ADD")actual=p.a+p.b;else if(p.op==="SUB")actual=p.a-p.b;else if(p.op==="MUL")actual=p.a*p.b;else if(p.op==="DIV")actual=p.a/p.b;else if(p.op==="LOAD")actual=p.a;else actual="unsupported";if(expected==="ERROR")out.push("✗ "+instruction+": expected an error but none occurred");else if(actual===expected){passed++;out.push("✓ "+instruction+" = "+actual)}else out.push("✗ "+instruction+": got "+actual+", expected "+expected)}catch(e){if(expected==="ERROR"){passed++;out.push("✓ "+instruction+" correctly rejected: "+e.message)}else out.push("✗ "+instruction+": "+e.message)}}
+    const storeCpu={acc:12,memory:[null]};storeCpu.memory[0]=storeCpu.acc;if(storeCpu.memory[0]===12){passed++;out.push("✓ STORE: M[0] = 12")}
+    $("testOutput").textContent=out.join("\n");$("testSummary").textContent=`${passed}/7 quick checks passed in the browser.`;toast(`${passed}/7 quick checks passed.`);
+  });
+  document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>{document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));a.classList.add("active")}));
+  render();
+})();
+</script>
+</body>
+</html>
